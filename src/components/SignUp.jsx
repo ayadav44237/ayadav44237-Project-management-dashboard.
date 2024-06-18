@@ -1,10 +1,13 @@
 import { useRef, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
+
 import { Box, Button, TextField, FormControl, InputLabel, Select, MenuItem, Typography, Container } from "@mui/material";
 
 function SignUp() {
   const emailRef = useRef();
+  const nameRef = useRef();
+  const [role,setRole]=useState("project-manager");
   const passwordRef = useRef();
   const passwordConfirmRef = useRef();
   const { signup } = useAuth();
@@ -14,7 +17,8 @@ function SignUp() {
 
   const handleChange = (event) => {
     const selectedRole = event.target.value;
-    localStorage.setItem("Role", selectedRole);
+    // localStorage.setItem("Role", selectedRole);
+    setRole(selectedRole);
   };
 
   async function handleSubmit(e) {
@@ -27,7 +31,8 @@ function SignUp() {
     try {
       setError("");
       setLoading(true);
-      await signup(emailRef.current.value, passwordRef.current.value);
+      // console.log("user",nameRef.current.value,roleRef.current.value,emailRef.current.value, passwordRef.current.value)
+      await signup(nameRef.current.value,role,emailRef.current.value, passwordRef.current.value);
       navigate("/signin");
     } catch {
       setError("Failed to create an account");
@@ -53,6 +58,8 @@ function SignUp() {
           <FormControl fullWidth margin="normal">
             <InputLabel id="role-label">Role</InputLabel>
             <Select
+              // ref={roleRef}
+              value={role}
               labelId="role-label"
               id="role"
               onChange={handleChange}
@@ -63,6 +70,14 @@ function SignUp() {
               <MenuItem value="employee">Employee</MenuItem>
             </Select>
           </FormControl>
+          <TextField
+            label="name"
+            type="name"
+            fullWidth
+            inputRef={nameRef}
+            required
+            margin="normal"
+          />
           <TextField
             label="Email"
             type="email"

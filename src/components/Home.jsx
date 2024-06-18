@@ -15,7 +15,7 @@ import {
   IconButton,
   Box,
 } from "@mui/material";
-import { Edit as EditIcon, Delete as DeleteIcon, MoreHoriz as MoreIcon } from "@mui/icons-material";
+import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -189,9 +189,6 @@ const Home = () => {
                   </IconButton>
                   <IconButton onClick={() => handleDeleteProject(project.id)}>
                     <DeleteIcon />
-                  </IconButton>
-                  <IconButton onClick={() => handleMore(project.id)}>
-                    <MoreIcon />
                   </IconButton>
                 </TableCell>
               </TableRow>
