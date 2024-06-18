@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import {
   Container,
   TextField,
@@ -16,10 +17,11 @@ import {
   Box,
 } from "@mui/material";
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 const Home = () => {
   const navigate = useNavigate();
-
+  const { logout } = useAuth();
   const [projectName, setProjectName] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
   const [projectTask, setProjectTask] = useState("");
@@ -109,15 +111,30 @@ const Home = () => {
     navigate(`/projects/${id}`);
   };
 
+  const handleLogout = async () => {
+    localStorage.removeItem("logedInUser");
+    window.location.reload();
+  };
+
   return (
     <Container>
       <Typography variant="h4" gutterBottom>
         Welcome to the Projects
       </Typography>
       <Box mb={2}>
-        <Button variant="contained" color="primary" onClick={handleAddProject}>
-          Add Project
-        </Button>
+        {JSON.parse(localStorage.getItem("logedInUser"))?.role ===
+        "project-manager" ? (
+          <>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAddProject}
+            >
+              Add Project
+            </Button>
+          </>
+        ) : null}
+
         {projects.length > 0 && (
           <Button
             variant="contained"
@@ -126,6 +143,28 @@ const Home = () => {
             style={{ marginLeft: "10px" }}
           >
             DELETE ALL
+          </Button>
+        )}
+
+        {JSON.parse(localStorage.getItem("logedInUser")) ? (
+          <>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleLogout}
+              style={{ marginLeft: "10px" }}
+            >
+              LOGOUT
+            </Button>
+          </>
+        ) : (
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => navigate("/signin")}
+            style={{ marginLeft: "10px" }}
+          >
+            SignIn
           </Button>
         )}
       </Box>
@@ -189,6 +228,9 @@ const Home = () => {
                   </IconButton>
                   <IconButton onClick={() => handleDeleteProject(project.id)}>
                     <DeleteIcon />
+                  </IconButton>
+                  <IconButton onClick={() => handleMore(project.id)}>
+                    <MoreVertIcon />
                   </IconButton>
                 </TableCell>
               </TableRow>

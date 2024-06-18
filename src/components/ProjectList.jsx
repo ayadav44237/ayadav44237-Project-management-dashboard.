@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import {
   Container,
   Typography,
@@ -14,19 +14,19 @@ import {
   Paper,
   IconButton,
   Box,
-} from '@mui/material';
-import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
+} from "@mui/material";
+import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 
 const ProjectList = () => {
   const { id } = useParams();
   const [tasks, setTasks] = useState([]);
-  const [task, setTask] = useState('');
-  const [description, setDescription] = useState('');
+  const [task, setTask] = useState("");
+  const [description, setDescription] = useState("");
   const [currentIndex, setCurrentIndex] = useState(-1);
 
   useEffect(() => {
-    const storedProjects = JSON.parse(localStorage.getItem('projects')) || [];
-    const project = storedProjects.find(project => project.id === Number(id));
+    const storedProjects = JSON.parse(localStorage.getItem("projects")) || [];
+    const project = storedProjects.find((project) => project.id === Number(id));
     if (project) {
       setTasks(project.tasks || []);
     }
@@ -38,12 +38,12 @@ const ProjectList = () => {
       const updatedTasks = [...tasks, newTask];
       setTasks(updatedTasks);
       updateProjectTasks(updatedTasks);
-      setTask('');
-      setDescription('');
+      setTask("");
+      setDescription("");
     }
   };
 
-  const handleDeleteTask = index => {
+  const handleDeleteTask = (index) => {
     const newTasks = tasks.filter((_, i) => i !== index);
     setTasks(newTasks);
     updateProjectTasks(newTasks);
@@ -56,13 +56,13 @@ const ProjectList = () => {
       );
       setTasks(updatedTasks);
       updateProjectTasks(updatedTasks);
-      setTask('');
-      setDescription('');
+      setTask("");
+      setDescription("");
       setCurrentIndex(-1);
     }
   };
 
-  const handleEditTask = index => {
+  const handleEditTask = (index) => {
     setTask(tasks[index].task);
     setDescription(tasks[index].description);
     setCurrentIndex(index);
@@ -73,12 +73,12 @@ const ProjectList = () => {
     updateProjectTasks([]);
   };
 
-  const updateProjectTasks = updatedTasks => {
-    const storedProjects = JSON.parse(localStorage.getItem('projects')) || [];
-    const updatedProjects = storedProjects.map(project =>
+  const updateProjectTasks = (updatedTasks) => {
+    const storedProjects = JSON.parse(localStorage.getItem("projects")) || [];
+    const updatedProjects = storedProjects.map((project) =>
       project.id === Number(id) ? { ...project, tasks: updatedTasks } : project
     );
-    localStorage.setItem('projects', JSON.stringify(updatedProjects));
+    localStorage.setItem("projects", JSON.stringify(updatedProjects));
   };
 
   return (
@@ -91,7 +91,7 @@ const ProjectList = () => {
           label="Project's Associated Task"
           fullWidth
           value={task}
-          onChange={e => setTask(e.target.value)}
+          onChange={(e) => setTask(e.target.value)}
           placeholder="Enter Your Task"
           margin="normal"
         />
@@ -99,7 +99,7 @@ const ProjectList = () => {
           label="Project Task Description"
           fullWidth
           value={description}
-          onChange={e => setDescription(e.target.value)}
+          onChange={(e) => setDescription(e.target.value)}
           placeholder="Enter the description"
           margin="normal"
         />
@@ -108,15 +108,15 @@ const ProjectList = () => {
           color="primary"
           onClick={currentIndex === -1 ? handleAddTask : handleUpdateTask}
           disabled={!(task && description)}
-          style={{ marginLeft: '10px' }}
+          style={{ marginLeft: "10px" }}
         >
-          {currentIndex === -1 ? 'Add Task' : 'Update Task'}
+          {currentIndex === -1 ? "Add Task" : "Update Task"}
         </Button>
         <Button
           variant="contained"
           color="secondary"
           onClick={handleDeleteAllTasks}
-          style={{ marginLeft: '10px' }}
+          style={{ marginLeft: "10px" }}
         >
           Delete All Tasks
         </Button>
