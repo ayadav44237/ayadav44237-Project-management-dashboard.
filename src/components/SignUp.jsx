@@ -2,12 +2,23 @@ import { useRef, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 
-import { Box, Button, TextField, FormControl, InputLabel, Select, MenuItem, Typography, Container } from "@mui/material";
+import {
+  Box,
+  Button,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Typography,
+  Container,
+} from "@mui/material";
 
 function SignUp() {
   const emailRef = useRef();
   const nameRef = useRef();
-  const [role,setRole]=useState("project-manager");
+  const roleRef = useRef();
+  const [role, setRole] = useState("project-manager");
   const passwordRef = useRef();
   const passwordConfirmRef = useRef();
   const { signup } = useAuth();
@@ -17,7 +28,8 @@ function SignUp() {
 
   const handleChange = (event) => {
     const selectedRole = event.target.value;
-    // localStorage.setItem("Role", selectedRole);
+    roleRef.current.value = selectedRole;
+    console.log(roleRef.current.value);
     setRole(selectedRole);
   };
 
@@ -31,8 +43,17 @@ function SignUp() {
     try {
       setError("");
       setLoading(true);
-      // console.log("user",nameRef.current.value,roleRef.current.value,emailRef.current.value, passwordRef.current.value)
-      await signup(nameRef.current.value,role,emailRef.current.value, passwordRef.current.value);
+
+      let signupData = await signup(
+        nameRef.current.value,
+        // roleRef.current.value,
+        role,
+        emailRef.current.value,
+        passwordRef.current.value
+      );
+
+      console.log("signupData", signupData);
+
       navigate("/signin");
     } catch {
       setError("Failed to create an account");
@@ -54,18 +75,20 @@ function SignUp() {
           Register Here
         </Typography>
         {error && <Typography color="error">{error}</Typography>}
-        <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
+        <Box component="form" onSubmit={handleSubmit} sx={{ width: "100%" }}>
           <FormControl fullWidth margin="normal">
             <InputLabel id="role-label">Role</InputLabel>
             <Select
-              // ref={roleRef}
+              ref={roleRef}
               value={role}
               labelId="role-label"
               id="role"
               onChange={handleChange}
               defaultValue=""
             >
-              <MenuItem value=""><em>Select Role</em></MenuItem>
+              <MenuItem value="">
+                <em>Select Role</em>
+              </MenuItem>
               <MenuItem value="project-manager">Project Manager</MenuItem>
               <MenuItem value="employee">Employee</MenuItem>
             </Select>

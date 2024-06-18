@@ -24,26 +24,27 @@ export function AuthProvider({ children }) {
       email,
       password
     );
+
+    console.log("user => ", name, role, email, password);
+    console.log("userCredential => ", userCredential);
+
     const user = userCredential.user;
 
-    // Store additional user data in Firestore
-    // await setDoc(doc(db, "users", user.uid), {
-    //   name: name,
-    //   role:role,
-    //   email: email,
-    //   createdAt: new Date()
-    // });
-    const users = localStorage.getItem("users") || [];
+    const users = JSON.parse(localStorage.getItem("users")) || [];
     const userDetails = {
       name,
       role,
       email,
       userId: user.uid,
     };
+
     users.push(userDetails);
 
+    console.log("User signed up and data stored! 3");
     localStorage.setItem("users", JSON.stringify(users));
-    console.log("User signed up and data stored!");
+    console.log("User signed up and data stored! 4");
+
+    return userDetails;
   }
 
   function login(email, password) {
